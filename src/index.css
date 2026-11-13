@@ -2,37 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Base & Typography */
 html, body, #root { height: 100%; }
 body {
-  @apply bg-cream text-ink font-sans antialiased transition-colors duration-300;
+  @apply bg-base text-[#F1F5F9] font-sans antialiased transition-colors duration-300;
   background-image:
-    radial-gradient(circle at 0% 0%, rgba(168,185,160,0.15), transparent 45%),
-    radial-gradient(circle at 100% 0%, rgba(234,227,242,0.5), transparent 40%);
+    radial-gradient(circle at 15% 0%, rgba(77, 163, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 85% 100%, rgba(167, 139, 250, 0.06), transparent 40%);
+  background-attachment: fixed;
 }
 
-/* Premium Dark Mode Base */
-.dark body { 
-  @apply bg-[#0B0D12] text-[#F1F5F9]; 
-  background-image: 
-    radial-gradient(circle at 0% 0%, rgba(168,185,160,0.08), transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(234,227,242,0.05), transparent 40%);
-}
-
-/* Premium Card with Hover */
-.card { 
-  @apply bg-white/90 dark:bg-[#16181F]/95 backdrop-blur-md rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] border border-black/5 dark:border-white/5 transition-all duration-300; 
+/* Glass Card Base */
+.card {
+  @apply bg-glass backdrop-blur-xl rounded-3xl border border-borderGlass shadow-glass transition-all duration-300;
 }
 .card:hover {
-  @apply shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(168,185,160,0.08)] -translate-y-0.5 border-black/10 dark:border-white/10;
+  @apply bg-glassHover border-white/20 shadow-glow-primary;
 }
 
-/* Buttons with click effect */
-.btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none; }
-.btn-primary { @apply bg-ink text-white hover:bg-black dark:bg-mint dark:text-ink dark:hover:bg-white dark:shadow-[0_0_15px_rgba(213,237,227,0.3)]; }
-.btn-ghost { @apply hover:bg-black/5 dark:hover:bg-white/10 dark:text-white; }
-.btn-soft { @apply bg-sage/25 text-ink hover:bg-sage/40 dark:bg-white/5 dark:text-white dark:border dark:border-white/10 dark:hover:bg-white/10; }
+/* Buttons */
+.btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none; }
+.btn-primary { @apply bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 hover:border-primary/50; }
+.btn-soft { @apply bg-white/5 text-[#F1F5F9] border border-white/10 hover:bg-white/10; }
+.btn-ghost { @apply text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-white/5; }
 
 /* Inputs */
-.input { @apply w-full rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0B0D12] px-3 py-2 text-sm outline-none transition-all focus:ring-2 focus:ring-sage/60 dark:focus:ring-mint/60 dark:text-white; }
-.label { @apply text-xs uppercase tracking-wider text-ink/50 dark:text-white/40 mb-1 block font-semibold; }
-.chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium; }
+.input { @apply w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-[#F1F5F9] placeholder-[#94A3B8]/50 outline-none transition-all focus:border-primary/50 focus:ring-1 focus:ring-primary/50; }
+.label { @apply text-xs uppercase tracking-wider text-[#94A3B8] mb-1.5 block font-semibold; }
+.chip { @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border; }
+
+/* Custom Scrollbar for Dark Mode */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply bg-white/10 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-white/20; }
+
+/* Chart Tooltip Overrides for Recharts */
+.recharts-default-tooltip {
+  @apply !bg-panel !border-borderGlass !rounded-xl !shadow-glass !text-[#F1F5F9] !backdrop-blur-md !border !p-3;
+}
+.recharts-tooltip-item { @apply !text-[#F1F5F9]; }
+.recharts-tooltip-label { @apply !text-[#94A3B8] !mb-2 !font-medium; }
