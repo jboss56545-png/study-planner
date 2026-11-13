@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useApp } from '../store/AppContext';
 import { dateKey, startOfWeek, addDays } from '../utils/date';
 import { Card, Button, ProgressBar, Chip, Modal, Input, EmptyState } from '../components/ui';
-import { CheckCircle2, Plus, Flame, Clock } from 'lucide-react';
+import { CheckCircle2, Plus, Flame, Clock, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 const QUOTES = [
@@ -43,59 +43,63 @@ export default function Dashboard() {
   const saveQuick = () => { if (!title.trim()) return; addTask({ title: title.trim(), scheduledDate: today, quadrant: 1 }); setTitle(''); setQuickAdd(false); };
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-        <div>
-          <p className="text-sm text-ink/50 dark:text-white/50">{new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</p>
-          <h1 className="text-2xl md:text-3xl font-bold mt-1">{greeting}{name?`, ${name}`:''}.</h1>
-          <p className="text-ink/60 dark:text-white/60 text-sm mt-1">{quote}</p>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
+          <p className="text-sm font-medium text-ink/50 dark:text-white/50">{new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold mt-1 tracking-tight">{greeting}{name?`, ${name}`:''}.</h1>
+          <p className="text-ink/60 dark:text-white/60 text-sm mt-2 italic">"{quote}"</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           {!state.user.name && (
             <Modal open={!name} onClose={() => setUser({ name: 'Friend' })} title="Welcome to ASVIRO TIMEFLOW" footer={<Button onClick={() => { setUser({ name: name.trim() || 'Friend' }); }}>Continue</Button>}>
               <p className="text-sm text-ink/70 dark:text-white/70 mb-3">What should we call you?</p>
               <Input autoFocus value={name} onChange={e => setName(e.target.value)} placeholder="Your name"/>
             </Modal>
           )}
-          <Button onClick={() => setQuickAdd(true)}><Plus size={16}/> Quick add</Button>
+          <Button onClick={() => setQuickAdd(true)} className="shadow-lg shadow-sage/20"><Plus size={18}/> Quick add</Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Stat label="Today" value={`${pct}%`} hint={`${completedToday}/${todays.length} tasks`} tone="sage"/>
-        <Stat label="Focus time" value={`${Math.floor(focusMins/60)}h ${focusMins%60}m`} hint={`${sessions.length} sessions`} tone="lavender"/>
-        <Stat label="Goals" value={state.goals.length} hint="active" tone="mint"/>
-        <Stat label="Pending" value={todays.filter(t=>!t.done).length} hint="today" tone="pastel"/>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <Stat label="Today" value={`${pct}%`} hint={`${completedToday}/${todays.length} tasks`} tone="sage" delay="0.15s"/>
+        <Stat label="Focus time" value={`${Math.floor(focusMins/60)}h ${focusMins%60}m`} hint={`${sessions.length} sessions`} tone="lavender" delay="0.2s"/>
+        <Stat label="Goals" value={state.goals.length} hint="active" tone="mint" delay="0.25s"/>
+        <Stat label="Pending" value={todays.filter(t=>!t.done).length} hint="today" tone="pastel" delay="0.3s"/>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-5">
+      <div className="grid md:grid-cols-3 gap-5 animate-fade-in-up" style={{ animationDelay: '0.35s' }}>
         <Card className="md:col-span-2">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold flex items-center gap-2"><Flame size={18}/> Today's priorities</h2>
-            <Link to="/daily" className="text-xs text-ink/60 hover:underline">Daily →</Link>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-lg flex items-center gap-2"><Flame size={20} className="text-orange-500"/> Today's priorities</h2>
+            <Link to="/daily" className="text-xs font-medium text-ink/60 hover:text-ink transition-colors">View all →</Link>
           </div>
           {priorities.length === 0 ? (
-            <EmptyState icon={CheckCircle2} title="No priorities set" description="Add priorities from the Daily planner." action={<Link to="/daily" className="btn btn-soft">Open Daily</Link>}/>
+            <EmptyState icon={CheckCircle2} title="No priorities set" description="Add priorities from the Daily planner to stay focused." action={<Link to="/daily" className="btn btn-soft">Open Daily</Link>}/>
           ) : (
             <ul className="space-y-2">
               {priorities.map(t => (
-                <li key={t.id} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-black/5 dark:hover:bg-white/5">
-                  <button onClick={() => toggleTask(t.id)} className="w-5 h-5 rounded-md border flex items-center justify-center border-black/20 dark:border-white/20"/>
-                  <span className="flex-1 text-sm">{t.title}</span>
+                <li key={t.id} className="flex items-center gap-3 p-3 rounded-xl bg-black/[0.02] dark:bg-white/5 hover:bg-black/[0.04] dark:hover:bg-white/10 transition-colors group cursor-pointer" onClick={() => toggleTask(t.id)}>
+                  <div className="w-5 h-5 rounded-md border-2 border-black/20 dark:border-white/20 flex items-center justify-center group-hover:border-sage transition-colors">
+                    {t.done && <CheckCircle2 size={14} className="text-sage"/>}
+                  </div>
+                  <span className="flex-1 text-sm font-medium">{t.title}</span>
                   {t.quadrant===1 && <Chip tone="danger">Do now</Chip>}
                 </li>
               ))}
             </ul>
           )}
         </Card>
+        
         <Card>
-          <h2 className="font-semibold flex items-center gap-2 mb-3"><Clock size={18}/> Upcoming today</h2>
+          <h2 className="font-bold text-lg flex items-center gap-2 mb-4"><Clock size={18}/> Upcoming today</h2>
           {upcoming.length === 0 ? <p className="text-sm text-ink/50 dark:text-white/50">No scheduled blocks yet.</p> : (
-            <ul className="space-y-2">
+            <ul className="space-y-3 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-px before:bg-black/10 dark:before:bg-white/10">
               {upcoming.map(tb => (
-                <li key={tb.id} className="flex items-center gap-3 text-sm">
-                  <span className="text-ink/50 dark:text-white/50 tabular-nums w-14">{tb.start}</span>
-                  <span className="flex-1 truncate">{tb.title}</span>
+                <li key={tb.id} className="flex items-center gap-3 text-sm relative z-10">
+                  <span className="text-xs font-semibold text-ink/50 dark:text-white/50 tabular-nums w-12 bg-cream dark:bg-[#1e2227] py-1">{tb.start}</span>
+                  <div className="w-2 h-2 rounded-full bg-sage ring-4 ring-cream dark:ring-[#1e2227]"></div>
+                  <span className="flex-1 truncate font-medium">{tb.title}</span>
                 </li>
               ))}
             </ul>
@@ -103,15 +107,15 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card>
-        <h2 className="font-semibold mb-3">Weekly productivity</h2>
-        <div className="h-48">
+      <Card className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+        <h2 className="font-bold text-lg flex items-center gap-2 mb-4"><TrendingUp size={20}/> Weekly productivity</h2>
+        <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={weekData}>
-              <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={12}/>
+              <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={12} dy={10}/>
               <YAxis hide/>
-              <Tooltip contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 24px rgba(0,0,0,.08)' }}/>
-              <Bar dataKey="done" fill="#A8B9A0" radius={[6,6,0,0]}/>
+              <Tooltip cursor={{fill: 'rgba(0,0,0,0.02)'}} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 24px rgba(0,0,0,.08)' }}/>
+              <Bar dataKey="done" fill="#A8B9A0" radius={[6,6,0,0]} maxBarSize={40}/>
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -119,19 +123,27 @@ export default function Dashboard() {
 
       <Modal open={quickAdd} onClose={() => setQuickAdd(false)} title="Quick add task">
         <Input autoFocus value={title} onChange={e => setTitle(e.target.value)} placeholder="What needs doing?" onKeyDown={e => e.key==='Enter' && saveQuick()}/>
-        <div className="flex justify-end mt-3"><Button onClick={saveQuick}>Add to today</Button></div>
+        <div className="flex justify-end mt-4"><Button onClick={saveQuick}>Add to today</Button></div>
       </Modal>
     </div>
   );
 }
 
-function Stat({ label, value, hint, tone }) {
-  const bg = { sage:'bg-sage/20', lavender:'bg-lavender/70', mint:'bg-mint/70', pastel:'bg-pastel/70' };
+function Stat({ label, value, hint, tone, delay }) {
+  const bg = { 
+    sage:'bg-sage/20 border-sage/30', 
+    lavender:'bg-lavender/70 border-lavender', 
+    mint:'bg-mint/70 border-mint', 
+    pastel:'bg-pastel/70 border-pastel' 
+  };
   return (
-    <div className={`rounded-2xl p-4 ${bg[tone]||bg.sage} dark:bg-white/5`}>
-      <div className="text-xs uppercase tracking-wider text-ink/50 dark:text-white/50">{label}</div>
-      <div className="text-2xl font-bold mt-1 tabular-nums">{value}</div>
-      <div className="text-xs text-ink/60 dark:text-white/60 mt-0.5">{hint}</div>
+    <div 
+      className={`rounded-2xl p-4 md:p-5 border ${bg[tone]||bg.sage} dark:bg-white/5 dark:border-white/10 animate-fade-in-up hover:-translate-y-1 hover:shadow-md transition-all duration-300`}
+      style={{ animationDelay: delay }}
+    >
+      <div className="text-[11px] uppercase tracking-wider font-semibold text-ink/50 dark:text-white/50">{label}</div>
+      <div className="text-2xl md:text-3xl font-extrabold mt-1 tabular-nums tracking-tight">{value}</div>
+      <div className="text-[11px] font-medium text-ink/60 dark:text-white/60 mt-1">{hint}</div>
     </div>
   );
 }
