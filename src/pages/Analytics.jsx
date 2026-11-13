@@ -4,7 +4,7 @@ import { dateKey, addDays } from '../utils/date';
 import { Card } from '../components/ui';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, PieChart, Pie, Cell, Legend, LineChart, Line } from 'recharts';
 
-const COLORS = ['#A8B9A0','#D5EDE3','#EAE3F2','#F8E9A9'];
+const COLORS = ['#4DA3FF','#42D9E8','#A78BFA','#FBBF24'];
 
 export default function Analytics() {
   const { state } = useApp();
@@ -23,61 +23,61 @@ export default function Analytics() {
   }, [state.tasks, state.sessions, range, cutoff]);
 
   const matrixData = [1,2,3,4].map(q => ({ name: ['Do Now','Schedule','Delegate','Eliminate'][q-1], value: state.tasks.filter(t => t.quadrant===q).length }));
-  const auditData = ['use','invest','waste'].map(c => ({ name: c, value: state.timeAudit.filter(e => e.category===c).reduce((a,e)=>a+e.duration,0) }));
+  const auditData = ['use','invest','waste'].map(c => ({ name: c.toUpperCase(), value: state.timeAudit.filter(e => e.category===c).reduce((a,e)=>a+e.duration,0) }));
   const totalFocus = Math.round(dailyData.reduce((a,d)=>a+d.focus,0)*10)/10;
   const totalTasksDone = dailyData.reduce((a,d)=>a+d.done,0);
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
+    <div className="space-y-6">
+      <div className="flex gap-2 overflow-x-auto pb-1">
         {[7,30,90].map(r => (
-          <button key={r} onClick={()=>setRange(r)} className={`px-3 py-1.5 rounded-xl text-sm ${range===r?'bg-ink text-white dark:bg-white dark:text-ink':'bg-white dark:bg-white/5'}`}>Last {r} days</button>
+          <button key={r} onClick={()=>setRange(r)} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${range===r?'bg-primary/20 text-primary border-primary/30':'bg-white/5 text-[#94A3B8] border-white/5 hover:bg-white/10'}`}>Last {r} days</button>
         ))}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Mini label="Tasks done" value={totalTasksDone}/>
-        <Mini label="Focus hours" value={`${totalFocus}h`}/>
-        <Mini label="Sessions" value={state.sessions.filter(s=>new Date(s.completedAt)>=cutoff && s.mode==='focus').length}/>
-        <Mini label="Notes" value={state.notes.length}/>
+        <Mini label="Tasks done" value={totalTasksDone} tone="primary"/>
+        <Mini label="Focus hours" value={`${totalFocus}h`} tone="lavender"/>
+        <Mini label="Sessions" value={state.sessions.filter(s=>new Date(s.completedAt)>=cutoff && s.mode==='focus').length} tone="secondary"/>
+        <Mini label="Notes" value={state.notes.length} tone="success"/>
       </div>
 
       <Card>
-        <h3 className="font-semibold mb-2">Daily completion & focus</h3>
-        <div className="h-64">
+        <h3 className="font-bold text-white mb-4">Daily completion & focus</h3>
+        <div className="h-72">
           <ResponsiveContainer>
             <LineChart data={dailyData}>
-              <XAxis dataKey="date" tickLine={false} axisLine={false} fontSize={11} interval="preserveStartEnd"/>
-              <YAxis fontSize={11} tickLine={false} axisLine={false}/>
-              <Tooltip contentStyle={{ borderRadius: 12, border:'none', boxShadow:'0 4px 24px rgba(0,0,0,.08)' }}/>
-              <Line type="monotone" dataKey="done" stroke="#A8B9A0" strokeWidth={2} dot={false}/>
-              <Line type="monotone" dataKey="focus" stroke="#EAE3F2" strokeWidth={2} dot={false}/>
+              <XAxis dataKey="date" tickLine={false} axisLine={false} fontSize={11} stroke="#94A3B8" interval="preserveStartEnd"/>
+              <YAxis fontSize={11} tickLine={false} axisLine={false} stroke="#94A3B8"/>
+              <Tooltip cursor={{fill: 'rgba(255,255,255,0.02)'}} />
+              <Line type="monotone" dataKey="done" stroke="#4DA3FF" strokeWidth={2} dot={false}/>
+              <Line type="monotone" dataKey="focus" stroke="#A78BFA" strokeWidth={2} dot={false}/>
             </LineChart>
           </ResponsiveContainer>
         </div>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-5">
         <Card>
-          <h3 className="font-semibold mb-2">Priority matrix distribution</h3>
-          <div className="h-56">
+          <h3 className="font-bold text-white mb-4">Priority matrix distribution</h3>
+          <div className="h-64">
             <ResponsiveContainer>
               <BarChart data={matrixData}>
-                <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={11}/>
-                <YAxis fontSize={11} tickLine={false} axisLine={false}/>
-                <Tooltip contentStyle={{ borderRadius: 12, border:'none' }}/>
-                <Bar dataKey="value" fill="#A8B9A0" radius={[8,8,0,0]}/>
+                <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={11} stroke="#94A3B8"/>
+                <YAxis fontSize={11} tickLine={false} axisLine={false} stroke="#94A3B8"/>
+                <Tooltip cursor={{fill: 'rgba(255,255,255,0.02)'}} />
+                <Bar dataKey="value" fill="#4DA3FF" radius={[8,8,0,0]}/>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
         <Card>
-          <h3 className="font-semibold mb-2">Time audit split</h3>
-          <div className="h-56">
-            {auditData.every(d => d.value===0) ? <p className="text-sm text-ink/40 text-center py-16">No audit data yet.</p> : (
+          <h3 className="font-bold text-white mb-4">Time audit split</h3>
+          <div className="h-64">
+            {auditData.every(d => d.value===0) ? <p className="text-sm text-[#94A3B8] text-center py-20">No audit data yet.</p> : (
               <ResponsiveContainer>
                 <PieChart>
-                  <Pie data={auditData} dataKey="value" nameKey="name" innerRadius={40} outerRadius={80}>
+                  <Pie data={auditData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={90} paddingAngle={4}>
                     {auditData.map((_,i) => <Cell key={i} fill={COLORS[i]}/>)}
                   </Pie>
                   <Legend/><Tooltip/>
@@ -87,26 +87,16 @@ export default function Analytics() {
           </div>
         </Card>
       </div>
-
-      <Card>
-        <h3 className="font-semibold mb-2">Goal progress</h3>
-        {state.goals.length===0 ? <p className="text-sm text-ink/40">No goals.</p> : (
-          <ul className="space-y-2">
-            {state.goals.map(g => {
-              const gt = state.tasks.filter(t=>t.goalId===g.id);
-              const pct = gt.length ? Math.round(gt.filter(t=>t.done).length/gt.length*100) : 0;
-              return <li key={g.id} className="flex items-center gap-3 text-sm"><span className="flex-1 truncate">{g.title}</span><span className="text-ink/50 w-10 text-right">{pct}%</span></li>;
-            })}
-          </ul>
-        )}
-      </Card>
     </div>
   );
 }
 
-const Mini = ({ label, value }) => (
-  <div className="rounded-2xl p-4 bg-white dark:bg-white/5 shadow-sm">
-    <div className="text-xs uppercase tracking-wider text-ink/50 dark:text-white/50">{label}</div>
-    <div className="text-2xl font-bold mt-1">{value}</div>
-  </div>
-);
+const Mini = ({ label, value, tone }) => {
+  const bg = { primary:'bg-primary/10 text-primary border-primary/20', lavender:'bg-lavender/10 text-lavender border-lavender/20', secondary:'bg-secondary/10 text-secondary border-secondary/20', success:'bg-success/10 text-success border-success/20' };
+  return (
+    <div className={`rounded-2xl p-4 border ${bg[tone]}`}>
+      <div className="text-[10px] uppercase tracking-widest font-bold opacity-80">{label}</div>
+      <div className="text-2xl font-bold mt-1">{value}</div>
+    </div>
+  );
+};
