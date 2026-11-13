@@ -13,7 +13,7 @@ export const ProgressBar = ({ value=0, className='', tone='sage' }) => {
   const tones = { sage:'bg-sage', mint:'bg-mint', pastel:'bg-pastel', lavender:'bg-lavender' };
   return (
     <div className={`w-full h-2 rounded-full bg-black/5 dark:bg-white/10 overflow-hidden ${className}`}>
-      <div className={`h-full ${tones[tone]||tones.sage} transition-all`} style={{width: `${Math.max(0, Math.min(100, value))}%`}}/>
+      <div className={`h-full ${tones[tone]||tones.sage} transition-all duration-700 ease-out`} style={{width: `${Math.max(0, Math.min(100, value))}%`}}/>
     </div>
   );
 };
@@ -21,11 +21,11 @@ export const ProgressBar = ({ value=0, className='', tone='sage' }) => {
 export function Modal({ open, onClose, title, children, footer }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 sm:p-4" onClick={onClose}>
-      <div className="w-full sm:max-w-lg bg-white dark:bg-[#1e2227] rounded-t-3xl sm:rounded-2xl shadow-xl max-h-[92vh] overflow-y-auto" onClick={e=>e.stopPropagation()}>
-        <div className="flex items-center justify-between p-4 border-b border-black/5 dark:border-white/5 sticky top-0 bg-white dark:bg-[#1e2227] z-10">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in-up sm:p-4" onClick={onClose}>
+      <div className="w-full sm:max-w-lg bg-white dark:bg-[#1e2227] rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[92vh] overflow-y-auto animate-pop-in" onClick={e=>e.stopPropagation()}>
+        <div className="flex items-center justify-between p-4 border-b border-black/5 dark:border-white/5 sticky top-0 bg-white/95 dark:bg-[#1e2227]/95 backdrop-blur z-10">
           <h3 className="font-semibold">{title}</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"><X size={18}/></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors"><X size={18}/></button>
         </div>
         <div className="p-4">{children}</div>
         {footer && <div className="p-4 border-t border-black/5 dark:border-white/5 sticky bottom-0 bg-white dark:bg-[#1e2227]">{footer}</div>}
@@ -35,8 +35,8 @@ export function Modal({ open, onClose, title, children, footer }) {
 }
 
 export const EmptyState = ({ icon: Icon, title, description, action }) => (
-  <div className="flex flex-col items-center justify-center text-center py-10 px-6">
-    {Icon && <div className="w-14 h-14 rounded-2xl bg-sage/20 dark:bg-white/10 flex items-center justify-center mb-3"><Icon size={22}/></div>}
+  <div className="flex flex-col items-center justify-center text-center py-10 px-6 animate-fade-in-up">
+    {Icon && <div className="w-16 h-16 rounded-2xl bg-sage/20 dark:bg-white/10 flex items-center justify-center mb-4 animate-float"><Icon size={26} className="text-ink dark:text-white"/></div>}
     <h4 className="font-semibold text-lg">{title}</h4>
     {description && <p className="text-sm text-ink/60 dark:text-white/60 mt-1 max-w-xs">{description}</p>}
     {action && <div className="mt-4">{action}</div>}
@@ -61,8 +61,8 @@ export function Confirm({ open, onClose, onConfirm, title='Are you sure?', descr
       <p className="text-sm text-ink/70 dark:text-white/70">{description}</p>
       <div className="mt-5 flex gap-2 justify-end">
         <Button variant="ghost" onClick={onClose}>Cancel</Button>
-        <button className="btn bg-red-600 text-white" onClick={() => { onConfirm(); onClose(); }}>{confirmLabel}</button>
+        <button className="btn bg-red-600 text-white hover:bg-red-700" onClick={() => { onConfirm(); onClose(); }}>{confirmLabel}</button>
       </div>
     </Modal>
   );
-                                                                                                                  }
+}
