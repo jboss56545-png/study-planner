@@ -9,23 +9,30 @@ body {
     radial-gradient(circle at 0% 0%, rgba(168,185,160,0.15), transparent 45%),
     radial-gradient(circle at 100% 0%, rgba(234,227,242,0.5), transparent 40%);
 }
-.dark body { @apply bg-[#14161a] text-[#ececec]; background-image: none; }
+
+/* Premium Dark Mode Base */
+.dark body { 
+  @apply bg-[#0B0D12] text-[#F1F5F9]; 
+  background-image: 
+    radial-gradient(circle at 0% 0%, rgba(168,185,160,0.08), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(234,227,242,0.05), transparent 40%);
+}
 
 /* Premium Card with Hover */
 .card { 
-  @apply bg-white/90 dark:bg-[#1e2227]/95 backdrop-blur-sm rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/5 dark:border-white/5 transition-all duration-300; 
+  @apply bg-white/90 dark:bg-[#16181F]/95 backdrop-blur-md rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] border border-black/5 dark:border-white/5 transition-all duration-300; 
 }
 .card:hover {
-  @apply shadow-[0_8px_30px_rgba(0,0,0,0.06)] -translate-y-0.5 border-black/10 dark:border-white/10;
+  @apply shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(168,185,160,0.08)] -translate-y-0.5 border-black/10 dark:border-white/10;
 }
 
 /* Buttons with click effect */
 .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none; }
-.btn-primary { @apply bg-ink text-white hover:bg-black hover:shadow-md dark:bg-mint dark:text-ink dark:hover:bg-white; }
-.btn-ghost { @apply hover:bg-black/5 dark:hover:bg-white/10; }
-.btn-soft { @apply bg-sage/25 text-ink hover:bg-sage/40 dark:bg-white/10 dark:text-white dark:hover:bg-white/20; }
+.btn-primary { @apply bg-ink text-white hover:bg-black dark:bg-mint dark:text-ink dark:hover:bg-white dark:shadow-[0_0_15px_rgba(213,237,227,0.3)]; }
+.btn-ghost { @apply hover:bg-black/5 dark:hover:bg-white/10 dark:text-white; }
+.btn-soft { @apply bg-sage/25 text-ink hover:bg-sage/40 dark:bg-white/5 dark:text-white dark:border dark:border-white/10 dark:hover:bg-white/10; }
 
 /* Inputs */
-.input { @apply w-full rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-[#262b31] px-3 py-2 text-sm outline-none transition-all focus:ring-2 focus:ring-sage/60 focus:border-sage/60; }
-.label { @apply text-xs uppercase tracking-wider text-ink/50 dark:text-white/50 mb-1 block font-semibold; }
+.input { @apply w-full rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0B0D12] px-3 py-2 text-sm outline-none transition-all focus:ring-2 focus:ring-sage/60 dark:focus:ring-mint/60 dark:text-white; }
+.label { @apply text-xs uppercase tracking-wider text-ink/50 dark:text-white/40 mb-1 block font-semibold; }
 .chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium; }
